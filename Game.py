@@ -12,6 +12,7 @@ class Game:
     def main_loop_game(self):
         position = self.start_position
         step = 0
+        previous_position = None
         while position != self.arrival_position:
             self.map.print_map(self.map_layout)
             print("Next move? (Use arrow key to play, something else to quit)")
@@ -24,9 +25,13 @@ class Game:
                 pass
                 clear()
             else:
+                if previous_position:
+                    previous_position_line, previous_position_column = previous_position
+                    self.map_layout[previous_position_line][previous_position_column] = '✨'
                 position = position_tmp
                 line, column = position
-                self.map_layout[line][column] = 'X'
+                self.map_layout[line][column] = '🚗'
+                previous_position = position
                 clear()
                 step += 1
         return step
@@ -42,3 +47,9 @@ class Game:
         print("Push a key to start")
         input()
         clear()
+
+
+
+
+
+

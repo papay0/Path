@@ -25,6 +25,7 @@ class Graph:
     def addQ(self, node, position, map):
         q = [node]
         seen = {}
+        i = 0
         while q:
             node = q.pop(0)
             position = node.position
@@ -35,7 +36,7 @@ class Graph:
                 node.add_neighbor(n)
                 if neighbor not in seen:
                     q.append(n)
-                    seen[position] = node
+                    seen[neighbor] = node
 
 
 

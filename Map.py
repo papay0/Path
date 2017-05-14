@@ -3,24 +3,26 @@ from utils import clear, wait
 class Map:
     def __init__(self):
         self.map = [
-                        ['S', 'U', '-', '-', '-', '-', '-', '-', 'U', '-', '-', '-', '-', '-'],
-                        ['-', 'U', '-', '-', '-', '-', '-', '-', 'U', '-', '-', '-', '-', '-'],
-                        ['-', 'U', '-', '-', '-', 'U', '-', 'U', '-', '-', '-', '-', '-', '-'],
-                        ['-', 'U', '-', '-', '-', 'U', '-', 'U', '-', '-', '-', '-', '-', '-'],
-                        ['-', 'U', '-', '-', 'U', 'U', '-', 'U', 'U', '-', '-', '-', '-', '-'],
-                        ['A', 'U', '-', 'U', 'U', '-', '-', 'U', '-', '-', '-', '-', '-', '-'],
-                        ['-', '-', '-', '-', '-', 'U', '-', '-', '-', '-', '-', '-', '-', '-'],
-                        ['-', '-', '-', '-', '-', 'U', '-', '-', '-', '-', '-', '-', '-', '-'],
-                        ['-', '-', '-', '-', '-', 'U', '-', '-', '-', '-', '-', '-', '-', '-']
+                        ['📍', '.', '.', '.', '.', '.', '.', '⛔️', '.', '.', '.', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '⛔️', '.', '⛔️', '.', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '⛔️', '.', '⛔️', '.', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '⛔️', '.', '.', '⛔️', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '⛔️', '⛔️', '.', '⛔️', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '⛔️', '.', '.', '⛔️', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '⛔️', '🏁', '.', '⛔️', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '.', '.', '.', '⛔️', '⛔️', '.', '.', '.', '.'],
+                        ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
                     ]
         self.height = len(self.map)
         self.width = len(self.map[0])
-        self.starting_char = 'S'
-        self.arrival_char = 'A'
-        self.path_char = 'X'
-        self.obstacle_char = 'U'
+        self.starting_char = '📍'
+        self.arrival_char = '🏁'
+        self.path_char = '🏎'
+        # self.obstacle_char = 'U'
+        self.obstacle_char = '⛔️'
         self.path = []
         self.waiting_time = 0.01
+        self.previous_position = None
 
     def get_height(self): return self.height
 
@@ -42,9 +44,15 @@ class Map:
 
     def get_map(self): return self.map
 
-    def print_map(self, map):
+    def print_map_(self, map):
         for line in map:
             print(line)
+    
+    def print_map(self, map):
+        for line in map:
+            for e in line:
+                print(e, end=' ')
+            print()
 
     def get_dummy_path(self):
         return [(0,0), (0,1), (0,2), (0,3), (0,4), (1,4), (2,4)]
@@ -80,7 +88,12 @@ class Map:
         return line >= 0 and column >= 0 and line <= self.height-1 and column <= self.width-1
 
     def mark_at_position_and_display(self, line, column, map):
+        if self.previous_position:
+            previous_position_line, previous_position_column = self.previous_position
+            self.map[previous_position_line][previous_position_column] = '✨'
+        self.previous_position = (line, column)
         self.map[line][column] = self.path_char
         self.print_map(map)
         wait(1)
         clear()
+

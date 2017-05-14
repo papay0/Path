@@ -38,4 +38,4 @@ def get_input(position, map):
 def clear():
     os.system('clear')
 def wait(t):
-    time.sleep(0.5)
+    time.sleep(0.2)
