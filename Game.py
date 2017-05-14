@@ -27,11 +27,14 @@ class Game:
             else:
                 if previous_position:
                     previous_position_line, previous_position_column = previous_position
-                    self.map_layout[previous_position_line][previous_position_column] = '✨'
+                    if not self.map.is_door(previous_position_line, previous_position_column):
+                        self.map_layout[previous_position_line][previous_position_column] = '✨'
                 position = position_tmp
                 line, column = position
-                self.map_layout[line][column] = '🚗'
+                if not self.map.is_door(line, column):
+                    self.map_layout[line][column] = '🚗'
                 previous_position = position
+                
                 clear()
                 step += 1
         return step

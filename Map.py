@@ -4,22 +4,22 @@ class Map:
     def __init__(self):
         self.map = [
                         ['📍', '.', '.', '.', '.', '.', '.', '⛔️', '.', '.', '.', '.', '.', '.'],
-                        ['.', '⛔️', '⛔️', '.', '.', '.', '.', '⛔️', '.', '⛔️', '.', '.', '.', '.'],
-                        ['.', '⛔️', '⛔️', '⛔️', '⛔️', '⛔️', '.', '⛔️', '.', '⛔️', '.', '.', '.', '.'],
-                        ['.', '⛔️', '.', '.', '.', '⛔️', '.', '⛔️', '.', '.', '⛔️', '.', '.', '.'],
+                        ['.', '⛔️', '⛔️', '.', '.', '.', '.', '⛔️', '.', '⛔️', '.', '.', '.', '🚪'],
+                        ['.', '⛔️', '⛔️', '⛔️', '.', '⛔️', '.', '⛔️', '.', '⛔️', '.', '.', '.', '.'],
+                        ['.', '⛔️', '.', '.', '.', '⛔️', '🚪', '⛔️', '.', '.', '⛔️', '.', '.', '.'],
                         ['.', '⛔️', '.', '.', '.', '⛔️', '.', '⛔️', '⛔️', '.', '⛔️', '.', '.', '.'],
                         ['.', '⛔️', '.', '⛔️', '.', '⛔️', '.', '⛔️', '.', '.', '⛔️', '.', '.', '.'],
-                        ['.', '⛔️', '.', '⛔️', '.', '⛔️', '⛔️', '⛔️', '🏁', '.', '⛔️', '.', '.', '.'],
+                        ['.', '⛔️', '.', '⛔️', '.', '⛔️', '⛔️', '⛔️', '.', '.', '⛔️', '.', '.', '.'],
                         ['.', '⛔️', '.', '⛔️', '.', '⛔️', '.', '.', '⛔️', '⛔️', '.', '.', '.', '.'],
-                        ['.', '.', '.', '⛔️', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+                        ['.', '.', '.', '⛔️', '.', '.', '.', '🏁', '.', '.', '.', '.', '.', '.']
                     ]
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.starting_char = '📍'
         self.arrival_char = '🏁'
         self.path_char = '🏎'
-        # self.obstacle_char = 'U'
         self.obstacle_char = '⛔️'
+        self.door_char = '🚪'
         self.path = []
         self.waiting_time = 0.01
         self.previous_position = None
@@ -81,19 +81,34 @@ class Map:
         if column < self.width-1 and not self.is_obstacle(line, column+1): neighbors.append((line, column+1))
         return neighbors
 
+    def get_other_door_position(self, line, column):
+        for _line in range(len(self.map)):
+            for _column in range(len(self.map[0])):
+                if self.map[_line][_column] == self.door_char and (line != _line or _column != column):
+                    return (_line, _column)
+        return None
+
+
     def is_obstacle(self, line, column):
         return self.map[line][column] == self.obstacle_char
 
     def is_valid(self, line, column):
         return line >= 0 and column >= 0 and line <= self.height-1 and column <= self.width-1
 
+    def is_door(self, line, column):
+        return self.map[line][column] == self.door_char
+
     def mark_at_position_and_display(self, line, column, map):
         if self.previous_position:
-            previous_position_line, previous_position_column = self.previous_position
-            self.map[previous_position_line][previous_position_column] = '✨'
+            previous_position_line, previous_position_column = self.previous_position 
+            if not self.is_door(previous_position_line, previous_position_column):
+                self.map[previous_position_line][previous_position_column] = '✨'
         self.previous_position = (line, column)
-        self.map[line][column] = self.path_char
-        self.print_map(map)
+        if not self.is_door(line, column):
+            self.map[line][column] = self.path_char
         wait(1)
         clear()
+        self.print_map(map)
+
+
 
