@@ -118,8 +118,8 @@ class Graph:
         for position in reversed(path):
             map.mark_at_position_and_display(position[0], position[1], map_layout)
             if minimum_step_count == self.step:
-                print("YOU WIN!")
+                print("YOU WON!")
             else:
-                print("YOU LOSE")
+                print("YOU LOST")
                 print("You did ", self.step - minimum_step_count, " steps more than the minimum")
                 print("Here is the shortest path")
